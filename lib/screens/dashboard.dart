@@ -19,8 +19,6 @@ class Dashboard extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   print(Url.token);
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => Arithmetic()));
                 },
                 child: Text('Arithmetic'),
               ),

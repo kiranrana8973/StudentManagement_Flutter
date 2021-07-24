@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:studentmanagement/api/url.dart';
 import 'package:studentmanagement/screens/dashboard.dart';
+import 'package:studentmanagement/screens/register.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -117,6 +118,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (_formKey.currentState!.validate()) {
                       _Login();
                     }
+                  },
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  child: Text('Register'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterUser(),
+                      ),
+                    );
                   },
                 ),
               ),
