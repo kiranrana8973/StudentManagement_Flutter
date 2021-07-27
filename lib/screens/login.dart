@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:studentmanagement/api/url.dart';
+import 'package:studentmanagement/httpservice/httpservice.dart';
+import 'package:studentmanagement/response/user_response.dart';
 import 'package:studentmanagement/screens/dashboard.dart';
 import 'package:studentmanagement/screens/register.dart';
+import 'package:dio/dio.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -27,12 +30,44 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    //_getAllStudents();
     usernameController.text = "kiran";
     passwordController.text = "kiran123";
+    _getUser();
     super.initState();
   }
 
-  void _Login() async {
+  void _getAllStudents() async {
+    String url = "${Url.url}student/";
+    var response = await http
+        .get(Uri.parse(url), headers: {'Authorization': 'Bearer ${Url.token}'});
+    var jsonResponse;
+    if (response.statusCode == 200) {
+      print(response.toString());
+      jsonResponse = json.decode(response.body);
+      print(jsonResponse["data"]);
+    }
+  }
+
+  late HttpService httpService;
+  late UserResponse userResponse;
+
+  Future _getUser() async {
+    Response response;
+    try {
+      response = await httpService.getRequest("auth/me");
+
+      if (response.statusCode == 200) {
+        userResponse = UserResponse.fromJson(response.data);
+      } else {
+        print("Error");
+      }
+    } on Exception catch (e) {
+      print("Mero error " + e.toString());
+    }
+  }
+
+  void _login() async {
     String url = "${Url.url}auth/login";
     var username = usernameController.text;
     var password = passwordController.text;
@@ -116,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text('Login'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _Login();
+                      _login();
                     }
                   },
                 ),
