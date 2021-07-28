@@ -8,8 +8,9 @@ class Student {
   int age;
   String gender;
   String address;
+  String photo;
 
-  Student(this.fullname, this.age, this.gender, this.address);
+  Student(this.fullname, this.age, this.gender, this.address, this.photo);
 
   factory Student.fromJson(Map<String, dynamic> json) =>
       _$StudentFromJson(json);

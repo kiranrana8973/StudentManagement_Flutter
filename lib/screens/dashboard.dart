@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:studentmanagement/model/student.dart';
-import 'package:studentmanagement/model/user.dart';
-import 'package:studentmanagement/response/studentresponse.dart';
 import '../api/url.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +13,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<Student> lstStudents = [];
+  List<Student> _lstStudents = [];
+  final String imageURL = "http://10.0.2.2:3000/uploads/";
 
   @override
   void initState() {
@@ -22,23 +22,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-/*
-
-    var response = await http.post(Uri.parse(url), body: body);
-    var jsonResponse;
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-      //To get the value from jsonresponse
-      var token = jsonResponse["token"];
-      Url.token = token;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Dashboard(),
-        ),
-      );
-    }
-*/
   void _getAllStudents() async {
     String url = "${Url.url}student/";
     var response = await http.get(Uri.parse(url), headers: {
@@ -47,15 +30,11 @@ class _DashboardState extends State<Dashboard> {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-
-      lstStudents = (jsonResponse['data'] as List)
-          .map((student) => Student.fromJson(student))
-          .toList();
-      // lstStudents = jsonResponse
-      //     .map((val) => new StudentResponse.fromJson(val['data']))
-      //     .toList();
-
-      print(lstStudents);
+      setState(() {
+        _lstStudents = (jsonResponse['data'] as List)
+            .map((student) => Student.fromJson(student))
+            .toList();
+      });
     }
   }
 
@@ -76,6 +55,64 @@ class _DashboardState extends State<Dashboard> {
                   print(Url.token);
                 },
                 child: Text('Show Students'),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 10,
+                child: new ListView.builder(
+                  itemCount: _lstStudents.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        onTap: () {
+                          Fluttertoast.showToast(
+                              msg: _lstStudents[index].fullname,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        },
+                        title: Text(_lstStudents[index].fullname),
+                        subtitle: Text(_lstStudents[index].gender),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              imageURL + _lstStudents[index].photo),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        trailing: Wrap(
+                          spacing: 10,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                print('Edit clicked');
+                              },
+                              icon: Icon(Icons.edit),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Fluttertoast.showToast(
+                                    msg: _lstStudents[index].fullname,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              },
+                              icon: Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],

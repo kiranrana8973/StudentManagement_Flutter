@@ -12,6 +12,7 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
     json['age'] as int,
     json['gender'] as String,
     json['address'] as String,
+    json['photo'] as String,
   );
 }
 
@@ -20,4 +21,5 @@ Map<String, dynamic> _$StudentToJson(Student instance) => <String, dynamic>{
       'age': instance.age,
       'gender': instance.gender,
       'address': instance.address,
+      'photo': instance.photo,
     };
