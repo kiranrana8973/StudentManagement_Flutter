@@ -4,13 +4,16 @@ part 'student.g.dart';
 
 @JsonSerializable()
 class Student {
+  @JsonKey(name: '_id')
+  String id;
   String fullname;
   int age;
   String gender;
   String address;
   String photo;
 
-  Student(this.fullname, this.age, this.gender, this.address, this.photo);
+  Student(
+      this.id, this.fullname, this.age, this.gender, this.address, this.photo);
 
   factory Student.fromJson(Map<String, dynamic> json) =>
       _$StudentFromJson(json);

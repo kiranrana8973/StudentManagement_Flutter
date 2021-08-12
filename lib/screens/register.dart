@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../api/url.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/constants.dart';
 
 class RegisterUser extends StatefulWidget {
   const RegisterUser({Key? key}) : super(key: key);
@@ -33,8 +33,7 @@ class _RegisterUserState extends State<RegisterUser> {
       "password": passwordController.text
     };
 
-    String url = "${Url.url}auth/register";
-    var response = await http.post(Uri.parse(url), body: user);
+    var response = await http.post(Uri.parse(REGISTER_URL), body: user);
     var jsonResponse;
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
